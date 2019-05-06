@@ -34,8 +34,22 @@ def receive_message():
 					if message['message'].get('attachments'):
 						if(addnextpic):
 							picture = message['message'].get('attachments')
-							send_message(recipient_id, picture)
-							print(type(picture))
+							print(picture)
+							imgurl = picture[0].get('payload').get('url')
+							
+							infile = False
+							f = open("pic.txt","r")
+							for line in f:
+								if(imgurl in line):
+									infile = True
+							f.close()
+							
+							if(infile==False):
+								print("adding picture "+imgurl)
+								f = open("pic.txt","a")
+								f.write(imgurl+'\n')
+								f.close()
+							
 							addnextpic = False
     
 	return "Message Processed"
