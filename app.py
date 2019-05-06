@@ -27,7 +27,6 @@ def receive_message():
 						if("/add" in message_str):
 							addnextpic = True
 						elif("/memory" in message_str):
-							print("sending picture")
 							tempimg = get_message()
 							send_message(recipient_id,tempimg)
 					
@@ -49,14 +48,12 @@ def receive_message():
 							f.close()
 							
 							if(infile==False):
-								print("adding picture "+imgurl)
 								f = open("pic.txt","a")
 								f.write(imgurl+'\n')
 								f.close()
 							
 							addnextpic = False
     
-	print("Message Processed")
 	return "Message Processed"
 
 def verify_fb_token(token_sent):
@@ -70,21 +67,21 @@ def get_message():
 	lines = 0
 	for line in f:
 		lines = lines+1
-	
+	f.close()
 	rline = random.randint(1,lines)-1
-
 	currline = 0
+	f = open("pic.txt","r")
 	for line in f:
 		if(currline==rline):
+			f.close()
 			return line
 		else:
 			currline = currline+1
-	print("success")
 	
 def send_message(recipient_id, url):
 	print("sending message...")
 	bot.send_image_url(recipient_id,url)
-	print("success")
 	return "success"
+
 if __name__ == '__main__':
     app.run()
