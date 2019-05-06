@@ -1,10 +1,11 @@
 import random
 from flask import Flask, request
 from pymessenger.bot import Bot
+import os
 
 app = Flask(__name__)
-ACCESS_TOKEN = "EAAhSXZBisdTsBAPluTgWitEe2yNASSW3kMmVeioMtCsIcuZBPnWZBbnpn5NitPMpwlhyORfJ8ALIY7sSUdL0kCJyAaP8xIsqRntWxG1GhHBZAkWjk0gwYTVUPrtkewc970APPSMbZCwUTMu1ZBUZASZBW8T9LAp60NHqd3Nj8mMZAUJS3GGFKfTqS"
-VERIFY_TOKEN = 'mtn6807'
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 bot = Bot(ACCESS_TOKEN)
 addnextpic = False
 print(bot)
