@@ -7,7 +7,7 @@ ACCESS_TOKEN = "EAAhSXZBisdTsBAPluTgWitEe2yNASSW3kMmVeioMtCsIcuZBPnWZBbnpn5NitPM
 VERIFY_TOKEN = 'mtn6807'
 bot = Bot(ACCESS_TOKEN)
 addnextpic = False
-
+print(bot)
 @app.route('/', methods=['GET', 'POST'])
 
 def receive_message():
@@ -24,17 +24,21 @@ def receive_message():
 					recipient_id = message['sender']['id']
 					if message['message'].get('text'):
 						message_str =(message['message'].get('text'))
-						print(message_str)
-						if(message_str=="/add"):
+						if("/add" in message_str):
 							addnextpic = True
-
-						response_sent_text = get_message()
-						send_message(recipient_id, message_str)
+						elif("/memory" in message_str):
+							print("sending picture")
+							tempimg = get_message()
+							send_message(recipient_id,tempimg)
 					
 					if message['message'].get('attachments'):
 						if(addnextpic):
 							picture = message['message'].get('attachments')
-							print(picture)
+							
+							if(picture[0].get('type')!='image'):
+								addnextpic = False
+								break
+
 							imgurl = picture[0].get('payload').get('url')
 							
 							infile = False
@@ -52,6 +56,7 @@ def receive_message():
 							
 							addnextpic = False
     
+	print("Message Processed")
 	return "Message Processed"
 
 def verify_fb_token(token_sent):
@@ -60,12 +65,26 @@ def verify_fb_token(token_sent):
     return 'Invalid verification token'
 
 def get_message():
-	sample_responses = ["Dawg", "Yo bet", "Homicide is the answer"]
-	return random.choice(sample_responses)
+	print("getting message...")
+	f = open("pic.txt","r")
+	lines = 0
+	for line in f:
+		lines = lines+1
+	
+	rline = random.randint(1,lines)-1
 
-def send_message(recipient_id, response):
-	bot.send_text_message(recipient_id, response)
+	currline = 0
+	for line in f:
+		if(currline==rline):
+			return line
+		else:
+			currline = currline+1
+	print("success")
+	
+def send_message(recipient_id, url):
+	print("sending message...")
+	bot.send_image_url(recipient_id,url)
+	print("success")
 	return "success"
-
 if __name__ == '__main__':
     app.run()
